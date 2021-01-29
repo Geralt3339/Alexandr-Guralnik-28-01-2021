@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { currentConditions } from '../rest/forecast'
+import { currentConditions, fiveDaysForecast } from '../rest/forecast'
 import { bus } from '../plugins/eventEmitter'
 
 import SearchFieldComponent from '../components/HomePage/searchField.component.vue'
@@ -30,12 +30,18 @@ export default {
   methods: {
     getCurrentConditions () {
       currentConditions('215854').then(res => {
-        console.log(res)
         return res.json()
       }).then((json) => {
         this.$store.dispatch('currentLocationWeather', json[0])
         console.log(json[0])
       }).then(() => {
+        fiveDaysForecast('215854').then(res => {
+          return res.json()
+        }).then(json => {
+          console.log(json)
+          this.$store.dispatch('currentFiveDaysForecast', json)
+        })
+      }).finally(() => {
         bus.$emit('current-weather-update')
       })
     }

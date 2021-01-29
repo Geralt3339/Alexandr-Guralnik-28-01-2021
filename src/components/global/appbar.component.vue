@@ -28,7 +28,8 @@ export default {
   watch: {
     theme (val) {
       this.$vuetify.theme.dark = val
-      this.$store.dispatch('setCurrentTheme', val)
+      this.$store.dispatch('currentTheme', val)
+      console.log(this.$store.getters.getCurrentTheme)
     }
   },
 

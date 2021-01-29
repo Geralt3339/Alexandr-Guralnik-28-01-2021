@@ -1,10 +1,54 @@
 <template>
   <v-col cols="6" sm="4" md="2">
-    <v-card height="100px" width="100%">
+    <v-card width="100%">
       <v-container class="text-center">
-        <p>Sunday</p>
-        <p>38 C</p>
+        <p>{{ dayOfWeek }}</p>
+        <p>{{ dayForecast.Temperature ? dayForecast.Temperature.Maximum.Value : '' }}</p>
+        <v-row class="mb-1">
+          <v-img :src="iconURL" />
+        </v-row>
       </v-container>
     </v-card>
   </v-col>
 </template>
+
+<script>
+export default {
+  props: {
+    dayForecast: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
+  },
+
+  data () {
+    return {
+      daysOfWeek: {}
+    }
+  },
+
+  computed: {
+    dayOfWeek () {
+      if (this.dayForecast.Date) {
+        let day = new Date(this.dayForecast.Date)
+        return this.daysOfWeek[day.getDay()]
+      } else {
+        return ''
+      }
+    },
+    iconURL () {
+      if (this.dayForecast.Day && String(this.dayForecast.Day.Icon).length === 1) {
+        return `https://developer.accuweather.com/sites/default/files/0${this.dayForecast.Day.Icon}-s.png`
+      } else {
+        return `https://developer.accuweather.com/sites/default/files/${this.dayForecast.Day.Icon}-s.png`
+      }
+    }
+  },
+
+  created () {
+    this.daysOfWeek = this.$store.getters.getDaysOfWeek
+  }
+}
+</script>

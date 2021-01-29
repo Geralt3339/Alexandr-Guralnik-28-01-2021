@@ -15,42 +15,30 @@ export const main = {
         }
       ]
     },
-    currentLocationWeather: {
-      precipitationType: '',
-      weatherText: '',
-      weatherIcon: null,
-      temperature: {
-        fahrenheit: null,
-        celcius: null
-      }
+    daysOfWeek: {
+      0: 'Sunday',
+      1: 'Monday',
+      2: 'Tuesday',
+      3: 'Wednesday',
+      4: 'Thursday',
+      5: 'Friday',
+      6: 'Saturday'
     }
   },
 
   getters: {
     getCurrentTheme: (state) => state.theme.dark,
     getAppbarLinks: (state) => state.appbar.links,
-    getCurrentLocationWeather: (state) => state.currentLocationWeather
+    getDaysOfWeek: (state) => state.daysOfWeek
   },
 
   mutations: {
     setTheme: (state, data) => {
       state.theme.dark = data
-    },
-    setCurrentLocationWeather: (state, data) => {
-      state.currentLocationWeather = {
-        precipitationType: data.PrecipitationType,
-        weatherText: data.WeatherText,
-        weatherIcon: data.WeatherIcon,
-        temperature: {
-          fahrenheit: `${data.Temperature.Imperial.Value} F`,
-          celcius: `${data.Temperature.Metric.Value} C`
-        }
-      }
     }
   },
 
   actions: {
-    currentTheme: ({ commit }, data) => { commit('setTheme', data) },
-    currentLocationWeather: ({ commit }, data) => { commit('setCurrentLocationWeather', data) }
+    currentTheme: ({ commit }, data) => { commit('setTheme', data) }
   }
 }
