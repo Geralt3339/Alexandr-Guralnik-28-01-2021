@@ -11,9 +11,12 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@mdi/font": "^5.9.55",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vuetify": "^2.4.3"
+    "vuetify": "^2.4.3",
+    "vuex": "^3.6.2",
+    "vuex-persistedstate": "^4.0.0-beta.3"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
