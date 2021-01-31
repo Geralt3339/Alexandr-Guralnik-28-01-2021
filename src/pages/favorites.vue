@@ -11,6 +11,10 @@ export default {
   name: 'Favorites',
   components: {
     FavoriteLocations
+  },
+
+  created () {
+    console.log(new Date())
   }
 }
 </script>

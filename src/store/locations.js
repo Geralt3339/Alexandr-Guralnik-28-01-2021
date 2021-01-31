@@ -7,18 +7,26 @@ export const locations = {
         longitude: null
       },
       name: ''
-    }
+    },
+    favoriteLocations: []
   },
 
   getters: {
-    getCurrentLocation: (state) => state.currentLocation
+    getCurrentLocation: (state) => state.currentLocation,
+    getFavoriteLocations: (state) => state.favoriteLocations
   },
 
   mutations: {
-    setCurrentLocation: (state, data) => { state.currentLocation = data }
+    setCurrentLocation: (state, data) => { state.currentLocation = data },
+    setFavoriteLocations: (state, data) => { state.favoriteLocations = data }
   },
 
   actions: {
-    currentLocation: ({ commit }, data) => { commit('setCurrentLocation', data) }
+    currentLocation: ({ commit }, data) => { commit('setCurrentLocation', data) },
+    addFavoriteLocation: ({ commit, state }, data) => {
+      const favorites = state.favoriteLocations
+      favorites.push(data)
+      commit('setFavoriteLocations', favorites)
+    }
   }
 }
