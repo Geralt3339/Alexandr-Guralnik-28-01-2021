@@ -2,14 +2,14 @@
   <v-row justify="start">
     <v-col cols="6" sm="3">
       <v-row justify="center" class="mt-1">
-        <v-img height="75px" width="75px" :src="iconURL" />
+        <v-img v-if="this.weatherIcon" height="75px" width="75px" :src="iconURL" />
       </v-row>
     </v-col>
     <v-col cols="6" md="3">
       <p class="mt-2">
-        <strong>Tel-Aviv</strong>
+        <strong>{{ location.name }}</strong>
       </p>
-      <p>{{ temperature }}</p>
+      <p class="pa-0 ma-0">Temperature now: {{ temperature }}</p>
     </v-col>
   </v-row>
 </template>
@@ -24,6 +24,10 @@ export default {
     weatherIcon: {
       type: Number,
       default: 0
+    },
+    location: {
+      type: Object,
+      required: true
     }
   },
 

@@ -1,5 +1,5 @@
-const Api = async (url) => {
-  const request = await fetch(`http://dataservice.accuweather.com/${url}`)
+const Api = async (url, options = {}) => {
+  const request = await fetch(`http://dataservice.accuweather.com/${url}`, options)
   return request
 }
 

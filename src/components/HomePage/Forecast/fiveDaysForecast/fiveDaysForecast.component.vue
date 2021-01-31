@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { bus } from '../../../../plugins/eventEmitter'
+
 import Day from './day/day.component'
 
 export default {
@@ -13,10 +15,20 @@ export default {
   props: {
     forecastData: {
       type: Array,
-      default () {
-        return []
-      }
+      required: true
     }
+  },
+
+  created () {
+    console.log('component created, fiveDaysForecast', this.forecastData)
+    bus.$on('five-days-forecast-update', () => {
+      console.log('five-days-forecast-update emitted', this.forecastData)
+      this.$forceUpdate()
+    })
+  },
+
+  beforeDestroy () {
+    bus.$off('five-days-forecast-update')
   }
 }
 </script>

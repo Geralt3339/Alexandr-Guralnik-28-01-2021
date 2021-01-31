@@ -8,15 +8,17 @@
         </v-col>
       </v-row>
     </v-container>
+    <notification />
   </div>
 </template>
 
 <script>
 import appbar from '../components/global/appbar.component.vue'
+import notification from '../components/global/notification.component.vue'
 
 export default {
   components: {
-    appbar
+    appbar, notification
   }
 }
 </script>

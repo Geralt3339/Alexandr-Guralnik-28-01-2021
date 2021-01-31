@@ -1,8 +1,5 @@
 export const main = {
   state: {
-    theme: {
-      dark: false
-    },
     appbar: {
       links: [
         {
@@ -23,22 +20,31 @@ export const main = {
       4: 'Thursday',
       5: 'Friday',
       6: 'Saturday'
+    },
+    configuration: {
+      unitSystem: {
+        isMetric: true
+      },
+      theme: {
+        dark: false
+      }
     }
   },
 
   getters: {
-    getCurrentTheme: (state) => state.theme.dark,
+    getCurrentTheme: (state) => state.configuration.theme.dark,
     getAppbarLinks: (state) => state.appbar.links,
-    getDaysOfWeek: (state) => state.daysOfWeek
+    getDaysOfWeek: (state) => state.daysOfWeek,
+    getUnitSystem: (state) => state.configuration.unitSystem.isMetric
   },
 
   mutations: {
-    setTheme: (state, data) => {
-      state.theme.dark = data
-    }
+    setTheme: (state, data) => { state.configuration.theme.dark = data },
+    setUnitSystem: (state, data) => { state.configuration.unitSystem.isMetric = data }
   },
 
   actions: {
-    currentTheme: ({ commit }, data) => { commit('setTheme', data) }
+    currentTheme: ({ commit }, data) => { commit('setTheme', data) },
+    unitSystem: ({ commit }, data) => { commit('setUnitSystem', data) }
   }
 }

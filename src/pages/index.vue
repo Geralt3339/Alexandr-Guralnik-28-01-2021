@@ -3,48 +3,77 @@
     <v-container class="pb-0 mb-0">
       <v-row>
         <v-col cols="10" offset="1" md="6" offset-md="3">
-          <search-field-component />
+          <autocomplete-search />
         </v-col>
       </v-row>
     </v-container>
     <forecast />
-    <v-btn @click="getCurrentConditions">Test request</v-btn>
   </v-container>
 </template>
 
 <script>
-import { currentConditions, fiveDaysForecast } from '../rest/forecast'
+import { fiveDaysForecast, currentConditions } from '../rest/forecast'
+import { searchByKey } from '../rest/location'
 import { bus } from '../plugins/eventEmitter'
 
-import SearchFieldComponent from '../components/HomePage/searchField.component.vue'
+import AutocompleteSearch from '../components/HomePage/Autocomplete/autocomplete.component'
 import Forecast from '../components/HomePage/Forecast/forecast.component.vue'
 
 export default {
   name: 'Home',
-  components: {SearchFieldComponent, Forecast},
+  components: {Forecast, AutocompleteSearch},
   data () {
     return {
     }
   },
 
-  methods: {
-    getCurrentConditions () {
-      currentConditions('215854').then(res => {
+  created () {
+    bus.$on('unit-system', () => {
+      console.log('this.$store.getters.getCurrentLocation.key', this.$store.getters.getCurrentLocation.key)
+      fiveDaysForecast(this.$store.getters.getCurrentLocation.key, this.$store.getters.getUnitSystem).then(res => {
+        return res.json()
+      }).then(json => {
+        console.log(json)
+        this.$store.dispatch('currentFiveDaysForecast', json)
+      }).finally(() => {
+        bus.$emit('current-weather-update')
+      })
+    })
+    bus.$on('get-weather', (locationKey) => {
+      searchByKey(locationKey).then(res => {
+        return res.json()
+      }).then(json => {
+        this.$store.dispatch('currentLocation', {
+          key: json.Key,
+          position: {
+            latitude: json.GeoPosition.Latitude,
+            longitude: json.GeoPosition.Longitude
+          },
+          name: json.LocalizedName
+        })
+      })
+      currentConditions(locationKey).then(res => {
         return res.json()
       }).then((json) => {
         this.$store.dispatch('currentLocationWeather', json[0])
         console.log(json[0])
       }).then(() => {
-        fiveDaysForecast('215854').then(res => {
+        fiveDaysForecast(locationKey, this.$store.getters.getUnitSystem).then(res => {
           return res.json()
         }).then(json => {
           console.log(json)
           this.$store.dispatch('currentFiveDaysForecast', json)
+        }).finally(() => {
+          bus.$emit('current-weather-update')
+          bus.$emit('five-days-forecast-update')
         })
-      }).finally(() => {
-        bus.$emit('current-weather-update')
       })
-    }
+    })
+  },
+
+  beforeDestroy () {
+    bus.$off('unit-system')
+    bus.$off('get-weather')
   }
 }
 </script>

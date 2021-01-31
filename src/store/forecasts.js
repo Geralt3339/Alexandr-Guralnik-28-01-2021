@@ -17,7 +17,7 @@ export const forecasts = {
         weatherIcon: data.WeatherIcon,
         temperature: {
           fahrenheit: `${data.Temperature.Imperial.Value} F`,
-          celcius: `${data.Temperature.Metric.Value} C`
+          celcius: `${Math.round(data.Temperature.Metric.Value)} C`
         }
       }
     },

@@ -5,11 +5,13 @@
     <template v-for="(item, index) in links">
       <v-btn text active-class="router-link-active" :key="index" :to="item.path">{{ item.name }}</v-btn>
     </template>
-    <v-switch v-model="theme" label="Dark theme" hide-details class="ml-12"></v-switch>
+    <appbar-menu />
   </v-app-bar>
 </template>
 
 <script>
+import AppbarMenu from './appbarMenu/menu.component'
+
 export default {
   props: {
     title: {
@@ -18,25 +20,18 @@ export default {
     }
   },
 
-  data () {
-    return {
-      theme: false,
-      links: []
-    }
+  components: {
+    AppbarMenu
   },
 
-  watch: {
-    theme (val) {
-      this.$vuetify.theme.dark = val
-      this.$store.dispatch('currentTheme', val)
-      console.log(this.$store.getters.getCurrentTheme)
+  data () {
+    return {
+      links: []
     }
   },
 
   created () {
     this.links = this.$store.getters.getAppbarLinks
-    this.theme = this.$store.getters.getCurrentTheme
-    this.$vuetify.theme.dark = this.theme
   }
 }
 </script>

@@ -3,9 +3,9 @@
     <v-card width="100%">
       <v-container class="text-center">
         <p>{{ dayOfWeek }}</p>
-        <p>{{ dayForecast.Temperature ? dayForecast.Temperature.Maximum.Value : '' }}</p>
+        <p>{{ dayForecast.Temperature ? `${Math.round(dayForecast.Temperature.Maximum.Value)} ${dayForecast.Temperature.Maximum.Unit}` : '' }}</p>
         <v-row class="mb-1">
-          <v-img :src="iconURL" />
+          <v-img v-if="this.dayForecast.Day.Icon" :src="iconURL" />
         </v-row>
       </v-container>
     </v-card>

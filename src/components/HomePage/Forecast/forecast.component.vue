@@ -4,24 +4,21 @@
       <v-toolbar-title>Forecast</v-toolbar-title>
     </v-toolbar>
     <v-parallax :src="require('../../../assets/clouds.jpg')" :class="isLoaded ? 'parallax-justify-content-fix' : ''" :height="parallaxHeight">
-      <template v-if="!isLoaded">
-        <h1 class="text-center text-border">Please wait</h1>
-      </template>
-      <template v-else>
-        <v-row align="center">
-          <v-col cols="12" sm="6">
-            <today class="text-border" :temperature="currentWeather.temperature ? currentWeather.temperature.celcius : null" :weatherIcon="currentWeather.weatherIcon ? currentWeather.weatherIcon : null" />
-          </v-col>
-          <v-col cols="12" sm="6">
-            <favorites />
-          </v-col>
-        </v-row>
-        <v-spacer />
-        <v-row align="center" class="mb-2 mt-2">
-          <v-col cols="12">
-            <p class="text-center text-h2 text-border">{{ currentWeather.weatherText }}</p>
-          </v-col>
-        </v-row>
+      <v-row align="center">
+        <v-col cols="12" sm="6">
+          <today v-if="currentLocation.name" class="text-border" :location="currentLocation" :temperature="currentWeather.temperature ? temperature : null" :weatherIcon="currentWeather.weatherIcon ? currentWeather.weatherIcon : null" />
+        </v-col>
+        <v-col cols="12" sm="6">
+          <favorites />
+        </v-col>
+      </v-row>
+      <v-spacer />
+      <v-row align="center" class="mb-2 mt-2">
+        <v-col cols="12">
+          <p class="text-center text-h2 text-border">{{ currentWeather.weatherText }}</p>
+        </v-col>
+      </v-row>
+      <template v-if="fiveDaysForecast.DailyForecasts">
         <five-days-forecast :forecastData="fiveDaysForecast.DailyForecasts" />
       </template>
     </v-parallax>
@@ -30,6 +27,7 @@
 
 <script>
 import { bus } from '../../../plugins/eventEmitter'
+import { geopositionSearch } from '../../../rest/location'
 
 import Today from './today/today.component'
 import Favorites from './favorites/favorites.component'
@@ -43,6 +41,7 @@ export default {
   data () {
     return {
       currentWeather: null,
+      currentLocation: null,
       fiveDaysForecast: {},
       isLoaded: false
     }
@@ -55,6 +54,14 @@ export default {
       } else {
         return '600px'
       }
+    },
+
+    temperature () {
+      if (!this.$store.getters.getUnitSystem) {
+        return this.currentWeather.temperature.fahrenheit
+      } else {
+        return this.currentWeather.temperature.celcius
+      }
     }
   },
 
@@ -62,12 +69,58 @@ export default {
     this.isLoaded = !!this.$store.getters.getCurrentLocationWeather.temperature
     this.currentWeather = this.$store.getters.getCurrentLocationWeather
     this.fiveDaysForecast = this.$store.getters.getFiveDaysForecast
+    this.currentLocation = this.$store.getters.getCurrentLocation
     bus.$on('current-weather-update', () => {
       this.currentWeather = this.$store.getters.getCurrentLocationWeather
       this.fiveDaysForecast = this.$store.getters.getFiveDaysForecast
+      this.currentLocation = this.$store.getters.getCurrentLocation
       this.isLoaded = true
+      console.log('current-weather-update emitted')
     })
-    console.log(this.$store.getters.getFiveDaysForecast)
+    console.log(navigator.geolocation)
+  },
+
+  mounted () {
+    if (!navigator.geolocation && !this.currentWeather.temperature) {
+      this.$store.dispatch('currentLocation', {
+        key: '215854',
+        position: {
+          latitude: 32.045,
+          longitude: 34.77
+        },
+        name: 'Tel Aviv'
+      })
+      this.currentLocation = this.$store.getters.getCurrentLocation
+      bus.$emit('get-weather', 215854)
+    } else {
+      if (!this.currentWeather.temperature) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          const latitude = pos.coords.latitude
+          const longitude = pos.coords.longitude
+          geopositionSearch(`${latitude},${longitude}`).then((res) => {
+            return res.json()
+          }).then(json => {
+            console.log(json)
+            this.$store.dispatch('currentLocation', {
+              key: json.Key,
+              position: {
+                latitude: json.GeoPosition.Latitude,
+                longitude: json.GeoPosition.Longitude
+              },
+              name: json.LocalizedName
+            })
+            this.currentLocation = this.$store.getters.getCurrentLocation
+            bus.$emit('get-weather', json.Key)
+          })
+        },
+        () => {
+          bus.$emit('noti', {
+            type: 'error',
+            text: `Your current location is unavailable`
+          })
+        })
+      }
+    }
   },
 
   beforeDestroy () {
