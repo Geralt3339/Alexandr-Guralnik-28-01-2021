@@ -1,5 +1,15 @@
 <template>
-  <v-autocomplete v-model="model" :items="items" item-text="LocalizedName" item-value="Key" :search-input.sync="search" :loading="isLoading" placeholder="Tel Aviv..." outlined />
+  <v-autocomplete
+    v-model="model"
+    :items="items"
+    item-text="LocalizedName"
+    item-value="Key"
+    :search-input.sync="search"
+    :loading="isLoading"
+    placeholder="Tel Aviv..."
+    :no-data-text="search == '' ? 'Start typing...' : 'No results'"
+    outlined
+  />
 </template>
 
 <script>
@@ -27,9 +37,15 @@ export default {
       }).then(json => {
         console.log(json)
         this.items = json
-      }).finally(() => {
-        this.isLoading = false
+      }).catch(() => {
+        bus.$emit('noti', {
+          type: 'error',
+          text: 'Sorry, the service is currently unavailable'
+        })
       })
+        .finally(() => {
+          this.isLoading = false
+        })
     },
 
     model (val) {

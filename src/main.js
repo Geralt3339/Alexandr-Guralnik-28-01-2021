@@ -18,3 +18,6 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+// export const apikey = '5B2X0vtpOp84BGI5GxudvGAcdx3UXs0U'
+export const apikey = 'cfiYdEmOtmJzsGA7pnJtYOZLksD6RAHl'

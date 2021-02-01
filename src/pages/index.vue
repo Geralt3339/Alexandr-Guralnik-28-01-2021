@@ -7,7 +7,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <forecast />
+    <forecast class="mb-12" />
   </v-container>
 </template>
 
@@ -51,6 +51,11 @@ export default {
           },
           name: json.LocalizedName
         })
+      }).catch(() => {
+        bus.$emit('noti', {
+          type: 'error',
+          text: 'Sorry, the service is currently unavailable'
+        })
       })
       currentConditions(locationKey).then(res => {
         return res.json()
@@ -67,8 +72,19 @@ export default {
           bus.$emit('current-weather-update')
           bus.$emit('five-days-forecast-update')
         })
+      }).catch(() => {
+        bus.$emit('noti', {
+          type: 'error',
+          text: 'Sorry, the service is currently unavailable'
+        })
       })
     })
+  },
+
+  beforeMount () {
+    if (this.$store.getters.getFiveDaysForecast.Headline) {
+      bus.$emit('unit-system')
+    }
   },
 
   beforeDestroy () {

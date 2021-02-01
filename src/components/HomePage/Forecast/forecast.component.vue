@@ -9,7 +9,7 @@
           <today v-if="currentLocation.name" class="text-border" :location="currentLocation" :temperature="currentWeather.temperature ? temperature : null" :weatherIcon="currentWeather.weatherIcon ? currentWeather.weatherIcon : null" />
         </v-col>
         <v-col cols="12" sm="6">
-          <favorites />
+          <favorites :location="currentLocation" :weather="currentWeather" />
         </v-col>
       </v-row>
       <v-spacer />
@@ -111,6 +111,11 @@ export default {
             })
             this.currentLocation = this.$store.getters.getCurrentLocation
             bus.$emit('get-weather', json.Key)
+          }).catch(() => {
+            bus.$emit('noti', {
+              type: 'error',
+              text: 'Sorry, the service is currently unavailable'
+            })
           })
         },
         () => {

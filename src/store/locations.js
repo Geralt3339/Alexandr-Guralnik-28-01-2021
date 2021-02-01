@@ -27,6 +27,10 @@ export const locations = {
       const favorites = state.favoriteLocations
       favorites.push(data)
       commit('setFavoriteLocations', favorites)
+    },
+    removeFavoriteLocation: ({ commit, state }, data) => {
+      const favorites = state.favoriteLocations.filter(location => location.key !== data)
+      commit('setFavoriteLocations', favorites)
     }
   }
 }

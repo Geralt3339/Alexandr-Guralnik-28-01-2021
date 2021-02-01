@@ -27,6 +27,7 @@ export default {
 
   created () {
     this.favorites = this.$store.getters.getFavoriteLocations
+    console.log(this.favorites)
   }
 }
 </script>
