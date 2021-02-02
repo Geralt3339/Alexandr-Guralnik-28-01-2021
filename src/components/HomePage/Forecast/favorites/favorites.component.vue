@@ -3,13 +3,15 @@
     <v-col>
       <v-row class="pr-2" justify="center" justify-sm="end" align="center">
         <v-icon :color="isFavorite ? 'error' : '#808080'" class="mr-2">{{ isFavorite ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
-        <v-btn outlined color="primary" @click="favoritesHandler">{{ isFavorite ? 'Remove from favorites' : 'Add to Favorites' }}</v-btn>
+        <v-btn depressed color="success" @click="favoritesHandler">{{ isFavorite ? 'Remove from favorites' : 'Add to Favorites' }}</v-btn>
       </v-row>
     </v-col>
   </v-row>
 </template>
 
 <script>
+import { bus } from '../../../../plugins/eventEmitter'
+
 export default {
   props: {
     location: {
@@ -46,13 +48,6 @@ export default {
     }
   },
 
-  mounted () {
-    console.log({
-      ...this.location
-    })
-    console.log(this.weather)
-  },
-
   updated () {
     const favorites = this.$store.getters.getFavoriteLocations
     if (favorites.filter(location => location.key === this.location.key).length !== 0) {
@@ -70,9 +65,17 @@ export default {
           ...this.weather
         })
         this.isFavorite = true
+        bus.$emit('noti', {
+          type: 'success',
+          text: `${this.location.name} is now favorite`
+        })
       } else {
         this.$store.dispatch('removeFavoriteLocation', this.location.key)
         this.isFavorite = false
+        bus.$emit('noti', {
+          type: 'success',
+          text: `${this.location.name} is no more favorite`
+        })
       }
     }
   }

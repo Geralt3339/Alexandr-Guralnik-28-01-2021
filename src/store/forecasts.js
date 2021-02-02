@@ -1,14 +1,12 @@
 export const forecasts = {
   state: {
     currentLocationWeather: {},
-    fiveDaysForecast: {},
-    lastUpdate: null
+    fiveDaysForecast: {}
   },
 
   getters: {
     getCurrentLocationWeather: (state) => state.currentLocationWeather,
-    getFiveDaysForecast: (state) => state.fiveDaysForecast,
-    getLastUpdate: (state) => state.lastUpdate
+    getFiveDaysForecast: (state) => state.fiveDaysForecast
   },
 
   mutations: {
@@ -25,7 +23,6 @@ export const forecasts = {
     },
     setFiveDaysForecast: (state, data) => {
       state.fiveDaysForecast = data
-      state.lastUpdate = new Date()
     }
   },
 

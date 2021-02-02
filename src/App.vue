@@ -1,19 +1,14 @@
 <template>
   <div id="app">
     <v-app>
-      <default-layout />
+      <router-view />
     </v-app>
   </div>
 </template>
 
 <script>
-import defaultLayout from './layouts/default'
-
 export default {
-  name: 'App',
-  components: {
-    defaultLayout
-  }
+  name: 'App'
 }
 </script>
 

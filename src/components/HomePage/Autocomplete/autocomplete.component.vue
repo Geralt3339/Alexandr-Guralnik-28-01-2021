@@ -32,12 +32,11 @@ export default {
       if (this.isLoading) return
       this.isLoading = true
       autocompleteSearch(val).then(res => {
-        console.log(res)
         return res.json()
       }).then(json => {
-        console.log(json)
         this.items = json
       }).catch(() => {
+        this.$store.dispatch('isLoadedToggle', false)
         bus.$emit('noti', {
           type: 'error',
           text: 'Sorry, the service is currently unavailable'

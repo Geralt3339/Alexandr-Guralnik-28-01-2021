@@ -18,7 +18,9 @@ export const locations = {
 
   mutations: {
     setCurrentLocation: (state, data) => { state.currentLocation = data },
-    setFavoriteLocations: (state, data) => { state.favoriteLocations = data }
+    setFavoriteLocations: (state, data) => {
+      state.favoriteLocations = data
+    }
   },
 
   actions: {

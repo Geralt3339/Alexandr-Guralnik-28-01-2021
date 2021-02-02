@@ -1,6 +1,6 @@
 <template>
-  <v-col cols="6" sm="4" md="2">
-    <v-card width="100%">
+  <v-col cols="12" sm="4" md="3" lg="2">
+    <v-card width="100%" @click="goToFavorite">
       <v-container class="text-center">
         <p><strong>{{ locationData.name }}</strong></p>
         <v-img :src="iconURL" />
@@ -30,8 +30,14 @@ export default {
     }
   },
 
-  created () {
-    console.log(this.locationData)
+  methods: {
+    goToFavorite () {
+      this.$store.dispatch('reloadToggle', {
+        isRequired: true,
+        reloadLocationKey: this.locationData.key
+      })
+      this.$router.push('/')
+    }
   }
 }
 </script>

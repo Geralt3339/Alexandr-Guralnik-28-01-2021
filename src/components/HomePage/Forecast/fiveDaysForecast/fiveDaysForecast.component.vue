@@ -20,9 +20,7 @@ export default {
   },
 
   created () {
-    console.log('component created, fiveDaysForecast', this.forecastData)
     bus.$on('five-days-forecast-update', () => {
-      console.log('five-days-forecast-update emitted', this.forecastData)
       this.$forceUpdate()
     })
   },

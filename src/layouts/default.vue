@@ -4,7 +4,7 @@
     <v-container>
       <v-row>
         <v-col cols="10" offset="1">
-          <router-view />
+          <slot />
         </v-col>
       </v-row>
     </v-container>

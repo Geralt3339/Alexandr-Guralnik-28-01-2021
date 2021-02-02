@@ -1,5 +1,4 @@
-import Api from './api'
-import { apikey } from '../main'
+import { Api, apikey } from './api'
 
 export const autocompleteSearch = (q) => {
   const response = Api(`locations/v1/cities/autocomplete?apikey=${apikey}&q=${q}`)

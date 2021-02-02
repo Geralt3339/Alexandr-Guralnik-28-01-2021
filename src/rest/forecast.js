@@ -1,5 +1,4 @@
-import Api from './api'
-import { apikey } from '../main'
+import { Api, apikey } from './api'
 
 export const currentConditions = (locationKey) => {
   const response = Api(`currentconditions/v1/${locationKey}?apikey=${apikey}`)
